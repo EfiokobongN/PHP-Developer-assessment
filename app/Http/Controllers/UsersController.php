@@ -21,10 +21,10 @@ class UsersController extends Controller
 
         try {
             $validator = Validator::make($request->all(), [
-                'customer_name' =>'required|customer_name|string|max:255',
-                'customer_email' =>'required|customer_email|max:255|unique:customers',
-                'customer_phone' =>'required|customer_phone|max:12|unique:customers',
-                'customer_cv' =>'required|customer_cv',
+                'customer_name' =>'required|string|max:255',
+                'customer_email' =>'required|max:255|unique:customers',
+                'customer_phone' =>'required|max:12|unique:customers',
+                'customer_cv' =>'required',
             ]);
     
             if ($validator->fails()) {

@@ -19,27 +19,26 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'Mobile_Phone' => 'required|string|Mobile_Phone|max:12|unique:users',
+            'mobile_phone' => 'required|string|unique:users',
             'password' => 'required|string|min:8',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-            DB::beginTransaction();
             try {
                 
                 $user = new User();
                 $user->name = $request->name;
                 $user->email = $request->email;
-                $user->Mobile_Phone = $request->Mobile_Phone;
+                $user->mobile_phone = $request->mobile_phone;
                 $user->password = Hash::make($request->password);
                 $user->save();
-                DB::commit();
+
                 Auth::login($user);
-                return back()->with(['success' => true, 'message' => 'User registered successfully']);
+                return redirect()->route('user.index')->with(['success' =>'User registered successfully']);
             } catch (\Throwable $th) {
-                DB::rollBack();
+
                 return back()->with(['error' => 'Something went wrong, please try again later']);
             }
         
@@ -54,16 +53,11 @@ class AuthController extends Controller
 
 
         if(Auth::attempt($validate)){
-            $user = Util::Auth();
-            if(!$user->email)
-            {
-                $message = "No account associated with this email address";
-            }else{
                 $message = "Login successful";
-            }
-            return back()->with(['success' => true, 'message' => $message], 200);
+                return redirect()->route('user.index')->with(['success' =>$message]);
+            
         } else {
-            return back()->with(['error' => false, 'message' => 'Invalid credentials']);
+            return back()->with(['error' => 'Invalid credentials']);
         }
     }
 }
