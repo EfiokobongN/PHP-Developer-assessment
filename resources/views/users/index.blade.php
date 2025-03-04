@@ -34,7 +34,7 @@
                                 <th scope="col" class="px-6 py-3 text-red-600">Email</th>
                                 <th scope="col" class="px-6 py-3 text-red-600">Mobile Number</th>
                                 <th scope="col" class="px-6 py-3 text-red-600">CV</th>
-                                <th scope="col" class="px-6 py-3 text-red-600">Date</th>
+                               
                                 <th scope="col" class="px-6 py-3 text-red-600">
                                     <span class="sr-only">Edit</span>
                                   </th>
@@ -58,7 +58,7 @@
                                                 class="text-secondary hover:font-semibold hover:underline cursor-pointer"
                                                 href="{{ url('storage/' .$customer->customer_cv) }}">View Cv</a>
                                         </td>
-                                        <td class="px-6 py-4">{{ $customer->created_at }}</td>
+                                       
 
                                         <td class="px-3 py-4 text-center">
                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +206,9 @@
 
 
 
-
+    @foreach ($userCustomers as $index => $customer)
+        
+    
     <!-- Edit modal -->
     <div id="edit-modal-{{ $customer->id }}" tabindex="-1" aria-hidden="true"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -297,8 +299,6 @@
         </div>
     </div>
 
-
-
     <!-- Delete Modal popup -->
     <div id="popup-modal-{{ $customer->id }}" tabindex="-1"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -341,5 +341,7 @@
             </div>
         </div>
     </div>
+
+    @endforeach
 
 @endsection

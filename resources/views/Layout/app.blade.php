@@ -28,7 +28,7 @@
   <body>
     <div class="antialiased bg-gray-50 ">
       @if ($errors->any())
-      <div class="error-alert" role="alert">
+      <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700" role="alert">
       <span class="font-medium">Error!</span>
       <ul>
           @foreach ($errors->all() as $error)
@@ -37,9 +37,10 @@
       </ul>
       </div>
       @endif
+
       
       @if (session('success'))
-      <div class="success-alert" role="alert">
+      <div class="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
       <span class="font-medium">Success!</span>
       <ul>
           <li>{{ session('success') }}</li>
@@ -49,13 +50,14 @@
       @endif
 
       @if (session('error'))
-      <div class="error-alert" role="alert">
+      <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700" role="alert">
       <span class="font-medium">Error!</span>
       <ul>
           <li>{{ session('error') }}</li>
       </ul>
       </div>
       <br>
+      
 
       @endif
         @yield("content")

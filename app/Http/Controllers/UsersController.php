@@ -33,7 +33,7 @@ class UsersController extends Controller
             $customer->customer_cv = $cvPath;
             $customer->save();
 
-            return back();
+            return back()->with('success', 'Customer Record Created Successfully');
         } catch (\Throwable $th) {
             return back()->with(['error' => $th->getMessage()], 500);
         }
@@ -56,7 +56,7 @@ class UsersController extends Controller
         $editCustomer->customer_phone = $request->customer_phone ?? $editCustomer->customer_phone;
         $editCustomer->customer_cv = $cvPath;
         $editCustomer->update();
-        return back()->with('success', 'Customer Details Updated Successfully');
+        return back()->with('success', 'Customer Record Updated Successfully');
     }
 
     public function deleteCustomer(Request $request)
