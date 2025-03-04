@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum' , 'identifier')->group(function () {
+    Route::post('/customer/store', [CustomerController::class, 'apiStoreCustomer']);
+    Route::post('/customer/edit/{id}', [CustomerController::class, 'apiEditCustomer']);
+    Route::get('/customer/get/{id}', [CustomerController::class, 'getCustomer']);
 });
 
-Route::post('/customer/store', [CustomerController::class, 'apiStoreCustomer']);
-Route::post('/customer/edit/{id}', [CustomerController::class, 'apiEditCustomer']);
-Route::get('/customer/get/{id}', [CustomerController::class, 'getCustomer']);
