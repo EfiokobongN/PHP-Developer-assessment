@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Customer;
 use App\Utility\Util;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
@@ -17,19 +19,9 @@ class UsersController extends Controller
     }
 
 
-    public function storeCustomer(Request $request){
+    public function storeCustomer(StoreCustomerRequest $request){
 
         try {
-            $validator = Validator::make($request->all(), [
-                'customer_name' =>'required|string|max:255',
-                'customer_email' =>'required|max:255|unique:customers',
-                'customer_phone' =>'required|max:12|unique:customers',
-                'customer_cv' =>'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return back()->withErrors($validator)->withInput();
-            }
             $cvPath =  $request->file('customer_cv')->store('cv', 'public');
     
             $auth = Util::Auth();
@@ -48,7 +40,22 @@ class UsersController extends Controller
         
     }
 
-    public function editCustomer(){
-
+    public function editCustomer(Request $request){
+        $editCustomer = Customer::find($request->id);
+        if(!$editCustomer){
+            return back()->with(['error' => 'Customer not found'], 404);
+        }
+        if($request->hasFile('customer_cv')){
+            Storage::delete('public/'.$editCustomer->customer_cv);  //delete old file before upload new one.
+            $cvPath = $request->file('customer_cv')->store('cv', 'public');
+        }else{
+            $cvPath = $editCustomer->customer_cv;
+        }
+        $editCustomer->customer_name = $request->customer_name ?? $editCustomer->customer_name;
+        $editCustomer->customer_email = $request->customer_email ?? $editCustomer->customer_email;
+        $editCustomer->customer_phone = $request->customer_phone ?? $editCustomer->customer_phone;
+        $editCustomer->customer_cv = $cvPath;
+        $editCustomer->update();
+        return back()->with('success', 'Customer Details Updated Successfully');
     }
 }
