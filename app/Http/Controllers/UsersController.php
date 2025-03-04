@@ -58,4 +58,15 @@ class UsersController extends Controller
         $editCustomer->update();
         return back()->with('success', 'Customer Details Updated Successfully');
     }
+
+    public function deleteCustomer(Request $request)
+    {
+        $deleteCustomer = Customer::find($request->id);
+        if(!$deleteCustomer){
+            return back()->with(['error' => 'Customer not found'], 404);
+        }
+        Storage::delete('public/'.$deleteCustomer->customer_cv);  //delete file before delete from database.
+        $deleteCustomer->delete();
+        return back()->with('success', 'Customer Deleted Successfully');
+    }
 }

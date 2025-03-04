@@ -15,7 +15,7 @@
 
 
                     <div class="max-w-lg mx-auto grow">
-                        <h1>Customers List</h1>
+                        <h1 class="text-xl lg:text-2xl font-semibold text-gray-700 tracking-tight mb-4">Customers List</h1>
                     </div>
 
                     <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
@@ -76,7 +76,7 @@
                                             <svg class="w-7 h-7 hover:text-red-800 text-red-700 cursor-pointer"
                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                 height="24" fill="currentColor" viewBox="0 0 24 24"
-                                                data-modal-target="popup-modal" data-modal-toggle="popup-modal">
+                                                data-modal-target="popup-modal-{{ $customer->id }}" data-modal-toggle="popup-modal-{{ $customer->id }}">
                                                 <path fill-rule="evenodd"
                                                     d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
                                                     clip-rule="evenodd" />
@@ -216,7 +216,7 @@
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
                     <h3 class="text-lg font-semibold text-gray-900">
-                        Edit Customer Details
+                        Edit <span class="text-blue-800">{{ $customer->customer_name }} </span> Details 
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -284,7 +284,7 @@
                                     d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            Save Customer Recored
+                            Save Changes
                         </button>
 
                         <button type="reset"
@@ -300,13 +300,13 @@
 
 
     <!-- Delete Modal popup -->
-    <div id="popup-modal" tabindex="-1"
+    <div id="popup-modal-{{ $customer->id }}" tabindex="-1"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <div class="relative bg-white rounded-lg shadow">
                 <button type="button"
                     class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                    data-modal-hide="popup-modal">
+                    data-modal-hide="popup-modal-{{ $customer->id }}">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -321,16 +321,22 @@
                             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500">
-                        Are you sure you want to delete Customer?
+                        Are you sure you want to delete : <span class="text-blue-800">{{ $customer->customer_name }}</span> Recored?
                     </h3>
-                    <button data-modal-hide="popup-modal" type="button"
+                    <form class="p-4 md:p-5" method="POST" action="{{ route('user.deleteCustomer') }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('delete')
+                    <input type="hidden" name="id" value="{{ $customer->id }}">
+                    <button data-modal-hide="popup-modal-{{ $customer->id }}" type="submit"
                         class="text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                         Yes, I'm sure
                     </button>
-                    <button data-modal-hide="popup-modal" type="button"
+                    <button data-modal-hide="popup-modal-{{ $customer->id }}" type="button"
                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">
                         No, cancel
                     </button>
+                    </form>
                 </div>
             </div>
         </div>
