@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +17,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/create-symlink', function(){
-    symlink(storage_path('/app/public'), public_path('storage'));
+    if (!file_exists(public_path('storage'))) {
+        symlink(storage_path('app/public'), public_path('storage'));
+        return "Symlink created successfully!";
+    }
+    return "Symlink already exists!";
 });
 
+
+Route::get('/clear-cache', function () {
+    // Clear cache
+    $exitCode = Artisan::call('cache:clear');
+    
+    // Re-cache configuration
+    $exitCode = Artisan::call('config:cache');
+    
+    // Run migrations
+    $exitCode = Artisan::call('migrate', ['--force' => true]);
+
+    return 'Cache cleared, config cached, and migrations run successfully.';
+});
 Route::get('/', function () {
     return view('welcome');
 })->name("user.signIn");
