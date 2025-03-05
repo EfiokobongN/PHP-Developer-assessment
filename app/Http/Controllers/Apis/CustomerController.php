@@ -24,14 +24,7 @@ class CustomerController extends Controller
         }
         try {
 
-        $cvPath= null; 
-
-        if ($request->hasFile('customer_cv')) {
-            $file = $request->file('customer_cv');
-            $extension = strtolower($file->getClientOriginalExtension());
-            $fileName = uniqid() . '.' . $extension;
-            $cvPath = env("BASE_URL") . "storage/cv/" . $fileName; 
-        }
+            $cvPath =  $request->file('customer_cv')->store('cv', 'public');
 
             $auth = Util::Auth();
             $customer = new Customer();
@@ -66,12 +59,7 @@ class CustomerController extends Controller
         }
         try {
 
-        if ($request->hasFile('customer_cv')) {
-            $file = $request->file('customer_cv');
-            $extension = strtolower($file->getClientOriginalExtension());
-            $fileName = uniqid() . '.' . $extension;
-            $cvPath = env("BASE_URL") . "storage/cv/" . $fileName; 
-        }
+            $cvPath =  $request->file('customer_cv')->store('cv', 'public');
             $apiEditCustomer->customer_name = $request->customer_name ?? $apiEditCustomer->customer_name;
             $apiEditCustomer->customer_email = $request->customer_email ?? $apiEditCustomer->customer_email;
             $apiEditCustomer->customer_phone = $request->customer_phone ?? $apiEditCustomer->customer_phone;

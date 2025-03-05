@@ -7,7 +7,6 @@ use App\Models\Customer;
 use App\Utility\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
