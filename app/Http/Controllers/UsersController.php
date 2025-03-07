@@ -21,7 +21,10 @@ class UsersController extends Controller
     public function storeCustomer(StoreCustomerRequest $request){
 
         try {
-            $cvPath =  $request->file('customer_cv')->store('cv', 'public');
+            $cvFile = $request->file('customer_cv');
+            $originalName = $cvFile->getClientOriginalName();
+            $cvPath = $cvFile->storeAs('cv', $originalName, 'public');
+
     
             $auth = Util::Auth();
             $customer = new Customer();
@@ -44,12 +47,18 @@ class UsersController extends Controller
         if(!$editCustomer){
             return back()->with(['error' => 'Customer not found'], 404);
         }
-        if($request->hasFile('customer_cv')){
-            Storage::delete('public/'.$editCustomer->customer_cv);  //delete old file before upload new one.
-            $cvPath = $request->file('customer_cv')->store('cv', 'public');
-        }else{
-            $cvPath = $editCustomer->customer_cv;
-        }
+
+    if ($request->hasFile('customer_cv')) {
+    if ($editCustomer->customer_cv) {
+        Storage::delete('public/cv/'.$editCustomer->customer_cv); 
+    }
+    $cvFile = $request->file('customer_cv');
+    $originalName = $cvFile->getClientOriginalName();
+    $cvPath = $cvFile->storeAs('cv', $originalName, 'public');
+} else {
+    $cvPath = $editCustomer->customer_cv;
+}
+
         $editCustomer->customer_name = $request->customer_name ?? $editCustomer->customer_name;
         $editCustomer->customer_email = $request->customer_email ?? $editCustomer->customer_email;
         $editCustomer->customer_phone = $request->customer_phone ?? $editCustomer->customer_phone;

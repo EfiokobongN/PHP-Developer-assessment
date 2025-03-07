@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Utility\Util;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
@@ -24,7 +25,9 @@ class CustomerController extends Controller
         }
         try {
 
-            $cvPath =  $request->file('customer_cv')->store('cv', 'public');
+            $cvFile = $request->file('customer_cv');
+            $originalName = $cvFile->getClientOriginalName();
+            $cvPath = $cvFile->storeAs('cv', $originalName, 'public');
 
             $auth = Util::Auth();
             $customer = new Customer();
@@ -59,7 +62,18 @@ class CustomerController extends Controller
         }
         try {
 
-            $cvPath =  $request->file('customer_cv')->store('cv', 'public');
+            if ($request->hasFile('customer_cv')) {
+                if ($apiEditCustomer->customer_cv) {
+                    Storage::delete('public/cv/'.$apiEditCustomer->customer_cv); 
+                }
+                $cvFile = $request->file('customer_cv');
+                $originalName = $cvFile->getClientOriginalName();
+                $cvPath = $cvFile->storeAs('cv', $originalName, 'public');
+            } else {
+                $cvPath = $apiEditCustomer->customer_cv;
+            }
+
+
             $apiEditCustomer->customer_name = $request->customer_name ?? $apiEditCustomer->customer_name;
             $apiEditCustomer->customer_email = $request->customer_email ?? $apiEditCustomer->customer_email;
             $apiEditCustomer->customer_phone = $request->customer_phone ?? $apiEditCustomer->customer_phone;
